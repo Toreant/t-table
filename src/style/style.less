@@ -1,0 +1,118 @@
+@primaryColor: #2979FF;
+@defaultColor: rgb(40, 42, 46);
+
+.t-container {
+    position: relative;
+    overflow: hidden;
+}
+.is-hidden {
+    visibility: hidden;
+}
+.t-table-fixed-wrapper_left,
+.t-table-fixed-wrapper_right {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    color: @defaultColor;
+}
+.t-table-fixed-wrapper_left {
+    left: 0;
+
+    &.is-scroll-middle,
+    &.is-scroll-right {
+        box-shadow: 0 2px 5px #ddd;
+    }
+}
+.t-table-fixed-wrapper_right {
+    right: 0
+}
+.t-table-header_body, 
+.t-table_body {
+    table-layout: fixed;
+    overflow: hidden;
+    background: #fff;
+    color: @defaultColor;
+
+    & tr {
+        background: #fff;
+
+        &.active {
+            background: #FFF7EE;
+
+            & td.active {
+                background: #ffe6ca;
+            }
+        }
+
+        & td.active {
+            background: #f0f0f0;
+        }
+    }
+
+    & td,
+    & th {
+        border-bottom: 1px solid #DDDFE6;
+    }
+
+    & th.active {
+        color: @primaryColor;
+        background: #f0f0f0;
+    }
+}
+.t-table-header_body tr {
+    vertical-align: middle;
+}
+.t-table-wrapper {
+    overflow: hidden;
+}
+.t-table-header-wrapper {
+    overflow: hidden;
+}
+.cell {
+    overflow: hidden;
+}
+.t-table-fixed_body {
+    overflow: hidden;
+}
+.t-table-sort {
+    position: relative;
+    margin-left: 4px;
+
+    & .sort-icon {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 0;
+        height: 0;
+
+        &.asc {
+            transform: translate3d(0, -55%, 0);
+            border-bottom: 8px solid #ddd;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+        }
+
+        &.desc {
+            transform: translate3d(0, 55%, 0);
+            border-top: 8px solid #ddd;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+        }
+    }
+}
+.sortable {
+    &.asc {
+        & .sort-icon.asc {
+            border-bottom: 8px solid @primaryColor;
+        }
+    }
+
+    &.desc {
+        & .sort-icon.desc {
+            border-top: 8px solid @primaryColor;
+        }
+    }
+}
