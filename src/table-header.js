@@ -12,12 +12,12 @@ export default {
 
     data() {
         return {
-            sortType: 0, // 0 - none, 1 - asc, 2 - desc
+            sortType: 0 // 0 - none, 1 - asc, 2 - desc
         }
     },
 
     methods: {
-        sortData: function(key) {
+        sortData: function (key) {
             return function (e) {
                 if (this.store.sortKey !== key) {
                     this.sortType = 1
@@ -50,58 +50,76 @@ export default {
             width = this.store.realColumnWidth
         }
         return (
-            <table class="t-table-header_body" cellpadding="0" cellspacing="0" border="0" width={width}>
+            <table
+                class="t-table-header_body"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                width={width}
+            >
                 <colgroup>
-                    {this._l(columns, (row, index) => <col width={row.width}/>)}
+                    {this._l(columns, (row, index) => (
+                        <col width={row.width} />
+                    ))}
                 </colgroup>
                 <thead>
                     <tr style={{ height: this.height + 'px' }}>
-                    {
-                        this._l(columns, (row, index) => {
+                        {this._l(columns, (row, index) => {
                             let th
 
                             if (row.sortable) {
                                 th = (
-                                    <th 
-                                        onClick={this.sortData(row.prop).bind(this)}
+                                    <th
+                                        onClick={this.sortData(row.prop).bind(
+                                            this
+                                        )}
                                         style={{
                                             'text-align': row.textAlign
                                         }}
-                                        class={{ 
-                                            'active': this.store.sortKey === row.prop,
-                                            'sortable': true,
-                                            'asc': this.sortType === 1 && this.store.sortKey === row.prop, 
-                                            'desc': this.sortType === 2 && this.store.sortKey === row.prop 
-                                        }}>
-                                        {
-                                            row.renderHeader(index, row.label, row.prop)
-                                        }
-                                        <span 
-                                            class="t-table-sort"
-                                            >
-                                            <i class="sort-icon asc"></i>
-                                            <i class="sort-icon desc"></i>
+                                        class={{
+                                            active:
+                                                this.store.sortKey === row.prop,
+                                            sortable: true,
+                                            asc:
+                                                this.sortType === 1 &&
+                                                this.store.sortKey === row.prop,
+                                            desc:
+                                                this.sortType === 2 &&
+                                                this.store.sortKey === row.prop
+                                        }}
+                                    >
+                                        {row.renderHeader(
+                                            index,
+                                            row.label,
+                                            row.prop
+                                        )}
+                                        <span class="t-table-sort">
+                                            <i class="sort-icon asc" />
+                                            <i class="sort-icon desc" />
                                         </span>
                                     </th>
                                 )
                             } else {
-                                th = <th
-                                style={{
-                                    'text-align': row.textAlign
-                                }}
-                                >
-                                {
-                                    row.renderHeader(index, row.label, row.prop)
-                                }
-                                </th>
+                                th = (
+                                    <th
+                                        style={{
+                                            'text-align': row.textAlign
+                                        }}
+                                    >
+                                        {row.renderHeader(
+                                            index,
+                                            row.label,
+                                            row.prop
+                                        )}
+                                    </th>
+                                )
                             }
 
                             return th
-                        })
-                    }
+                        })}
                     </tr>
                 </thead>
             </table>
         )
     }
-};
+}

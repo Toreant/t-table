@@ -31,7 +31,7 @@ export default {
                 <tbody>
                     {
                         this._l(this.data, (row, index) => {
-                            let tds;
+                            let tds
                             if (this.fixed === true || this.fixed === 'left') {
                                 tds = columns.map((col, colIndex) => {
                                     if (!col.fixed || col.fixedSide !== 'left') {
@@ -75,10 +75,10 @@ export default {
         normalColumns: function () {
             
         },
-        leftFixedCount: function() {
+        leftFixedCount: function () {
             return this.store.leftFixedColumns.length
         },
-        rightFixedCount: function() {
+        rightFixedCount: function () {
             return this.store.rightFixedColumns.length
         },
     },
@@ -86,4 +86,4 @@ export default {
     methods: {
 
     }
-};
+}

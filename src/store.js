@@ -24,11 +24,19 @@ class Store {
     updateColumns() {
         let columns = this._columns.slice()
         let normalColumns = columns.filter(item => !item.fixed && !item.hidden)
-        this.leftFixedColumns = columns.filter(item => !!item.fixed && item.fixedSide === 'left')
-        this.rightFixedColumns = columns.filter(item => !!item.fixed && item.fixedSide === 'right')
+        this.leftFixedColumns = columns.filter(
+            item => !!item.fixed && item.fixedSide === 'left'
+        )
+        this.rightFixedColumns = columns.filter(
+            item => !!item.fixed && item.fixedSide === 'right'
+        )
         this.hiddenColumns = columns.filter(item => !!item.hidden)
         // 把left_fix的列放在最左边，right_fix的列放在最右边
-        this.columns = [...this.leftFixedColumns, ...normalColumns, ...this.rightFixedColumns]
+        this.columns = [
+            ...this.leftFixedColumns,
+            ...normalColumns,
+            ...this.rightFixedColumns
+        ]
     }
 
     updateColumnWidth() {
@@ -60,4 +68,4 @@ class Store {
     }
 }
 
-module.exports = Store;
+module.exports = Store

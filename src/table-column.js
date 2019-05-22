@@ -1,6 +1,4 @@
-import store from './store'
-
-let tableColumnIdSeed = 1;
+let tableColumnIdSeed = 1
 
 function parseProp(target) {
     let config = {
@@ -14,12 +12,12 @@ function parseProp(target) {
         hidden: false,
         label: '',
         textAlign: 'center'
-    };
+    }
 
     if (target.fixed) {
         config.fixed = true
         if (typeof target.fixed === 'string' && ['left', 'right'].indexOf(target.fixed) !== -1) {
-            config.fixedSide = target.fixed.toString();
+            config.fixedSide = target.fixed.toString()
         } else {
             config.fixedSide = 'left'
         }
@@ -35,7 +33,7 @@ function parseProp(target) {
 
     if (target.sortable) {
         if (typeof target.fixed === 'string' && ['asc', 'desc'].indexOf(target.fixed) !== -1) {
-            config.sortable = target.sortable.toString();
+            config.sortable = target.sortable.toString()
         } else {
             config.sortable = 'asc'
         }

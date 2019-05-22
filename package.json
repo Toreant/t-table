@@ -19,6 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-istanbul": "^4.1.1",
@@ -31,6 +32,7 @@
     "babel-regenerator-runtime": "^6.5.0",
     "chalk": "^2.4.2",
     "css-loader": "^2.1.1",
+    "eslint": "^5.16.0",
     "happypack": "^5.0.1",
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.6.0",
