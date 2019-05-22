@@ -104,13 +104,24 @@ export default {
             return <div class="cell">{data[prop]}</div>
         }
 
+        let renderHeader = function (i, label, prop) {
+            return <span>{label}</span>
+        }
+
         if (this.$scopedSlots.default) {
-            let _self = this;
+            let _self = this
             renderCell = function (i, data, prop) {
                 return <div class="cell">{_self.$scopedSlots.default({row: data, index: i})}</div>
             }
         }
+        if (this.$slots.header) {
+            let _self = this
+            renderHeader = function (i, label, prop) {
+                return _self.$slots.header
+            }
+        }
         this.columnConfig.renderCell = renderCell
+        this.columnConfig.renderHeader = renderHeader
 
         this.owner.store.insertColumn(this.columnConfig, index, this.$parent)
 

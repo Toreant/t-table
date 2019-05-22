@@ -10,6 +10,7 @@ class Layout {
         this.scrollLeft = 0
         this.scrollTop = 0
         this.isMoved = false
+        this.tweening = false
     }
 
     getTransformStyle(x = 0, y = 0, z = 0) {

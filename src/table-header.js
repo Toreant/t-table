@@ -37,15 +37,27 @@ export default {
     },
 
     render(h) {
+        let columns = []
+        let width
+        if (this.fixed === true || this.fixed === 'left') {
+            columns = this.store.leftFixedColumns
+            width = this.store.leftFixColumnWidth
+        } else if (this.fixed === 'right') {
+            columns = this.store.rightFixedColumns
+            width = this.store.rightFixColumnWidth
+        } else {
+            columns = this.store.columns
+            width = this.store.realColumnWidth
+        }
         return (
-            <table class="t-table-header_body" cellpadding="0" cellspacing="0" border="0" width={this.store.realColumnWidth}>
+            <table class="t-table-header_body" cellpadding="0" cellspacing="0" border="0" width={width}>
                 <colgroup>
-                    {this._l(this.store.columns, (row, index) => <col width={row.width}/>)}
+                    {this._l(columns, (row, index) => <col width={row.width}/>)}
                 </colgroup>
                 <thead>
                     <tr style={{ height: this.height + 'px' }}>
                     {
-                        this._l(this.store.columns, (row, index) => {
+                        this._l(columns, (row, index) => {
                             let th
 
                             if (row.sortable) {
@@ -61,7 +73,9 @@ export default {
                                             'asc': this.sortType === 1 && this.store.sortKey === row.prop, 
                                             'desc': this.sortType === 2 && this.store.sortKey === row.prop 
                                         }}>
-                                        { row.label }
+                                        {
+                                            row.renderHeader(index, row.label, row.prop)
+                                        }
                                         <span 
                                             class="t-table-sort"
                                             >
@@ -75,7 +89,11 @@ export default {
                                 style={{
                                     'text-align': row.textAlign
                                 }}
-                                >{ row.label }</th>
+                                >
+                                {
+                                    row.renderHeader(index, row.label, row.prop)
+                                }
+                                </th>
                             }
 
                             return th

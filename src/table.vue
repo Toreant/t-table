@@ -1,6 +1,7 @@
 <template>
     <div
         class="t-container"
+        ref="tableContainer"
         :style="style"
     >
         <div
@@ -42,6 +43,7 @@
                 <table-header
                     :store="store"
                     :height="headerHeight"
+                    @sortData="sortData"
                     fixed="left"
                 ></table-header>
             </div>
@@ -57,15 +59,18 @@
         <div
             v-if="isRightFixed && data.length > 0"
             class="t-table-fixed-wrapper_right"
-            :style="{width: rightFixColumnWidth + 'px'}"
-            ref="tTableRightFixedWrapper"
+            :class="store.horizontelScrollType"
+            :style="{maxWidth: rightFixColumnWidth + 'px', height: style.height}"
         >
             <div>
                 <table-header
                 :store="store"
                 :height="headerHeight"
+                @sortData="sortData"
                 fixed="right"
                 ></table-header>
+            </div>
+            <div class="t-table-fixed_body" ref="tTableRightFixedWrapper" :style="{ height: bodyHeight }">
                 <table-body
                     :store="store"
                     :data="data"
@@ -174,6 +179,10 @@ export default {
         maxScrollLeft() {
             let r = this.store.realColumnWidth - this.bodyWrapper.getBoundingClientRect().width
             return r
+        },
+
+        maxScrollHeight() {
+            return parseInt(getComputedStyle(this.tableBody).height.match(/(\d+)/)[1]) - this.bodyWrapper.getBoundingClientRect().height
         }
     },
 
@@ -183,13 +192,17 @@ export default {
             store: new Store(),
             leftFixColumnWidth: 0,
             rightFixColumnWidth: 0,
-            layout: new Layout()
+            layout: new Layout(),
+            tween: new TWEEN()
         }
     },
 
     watch: {
         'store.leftFixColumnWidth'(newVal, oldVal) {
             this.leftFixColumnWidth = newVal
+        },
+        'store.rightFixColumnWidth'(newVal) {
+            this.rightFixColumnWidth = newVal
         }
     },
 
@@ -198,7 +211,7 @@ export default {
     },
 
     mounted() {
-        this.initEvent(this.bodyWrapper)
+        this.initEvent(this.$refs.tableContainer)
     },
 
     destroyed() {
@@ -214,7 +227,16 @@ export default {
                 x: event.touches[0].clientX, y: event.touches[0].clientY
             }
             this.layout.startTimestamp = Date.now()
-            TWEEN.cancel()
+            if (this.layout.tweening) {
+                console.log('start cancel')
+                this.layout.tweening = false
+                this.tween.cancel()
+                this.$emit('move', {
+                    scrollLeft: this.layout.scrollLeft,
+                    scrollTop: this.layout.scrollTop
+                })
+            }
+            
         },
         touchMove(event) {
 
@@ -259,24 +281,8 @@ export default {
             this.layout.endPoint = null
             this.layout.setLayoutData(this.bodyWrapper)
 
-            let maxScrollHeight = parseInt(getComputedStyle(this.tableBody).height.match(/(\d+)/)[1]) - this.bodyWrapper.getBoundingClientRect().height
-        
+            let maxScrollHeight = this.maxScrollHeight
             this.store.updateHorizontelType(this.maxScrollLeft, this.layout.scrollLeft)
-
-            let scrollTop;
-            let scrollLeft;
-
-            if (this.layout.scrollTop > 0) {
-                scrollTop = 0
-            } else if (this.layout.scrollTop < 0 && this.layout.scrollTop >= maxScrollHeight) {
-                scrollTop = maxScrollHeight
-            }
-            
-            if (this.layout.scrollLeft < 0) { 
-                scrollLeft = 0
-            } else if (this.layout.scrollLeft > this.maxScrollLeft) {
-                scrollLeft = this.maxScrollLeft
-            }
 
             let initSpeed;
             let tweenSide;
@@ -287,17 +293,24 @@ export default {
                 initSpeed = Math.abs((endPoint.x - startPoint.x) / (endTime - startTime) * 1000)
                 tweenSide = _side2
             } else {
-
-                this.$emit('moveCb', {
-                    scrollLeft: scrollLeft,
-                    scrollTop: scrollTop
+                this.$emit('move', {
+                    scrollLeft: this.layout.scrollLeft,
+                    scrollTop: this.layout.scrollTop
                 })
                 return
             }
 
             initSpeed = Math.min(initSpeed, 1500)
+            this.layout.tweening = true
 
-            TWEEN.animate('easeOut', initSpeed, 0, 100, 35, (err, v, tag) => {
+            this.tween.animate('easeOut', initSpeed, 0, 100, 35, (err, v, tag) => {
+
+                // fix bug for tween animate
+                // when call TWEEN.cancel, the animate function cant end at once
+                if (!this.layout.tweening) {
+                    return
+                }
+
                 if (err) {
                     console.error(err);
                 } else {
@@ -305,6 +318,7 @@ export default {
                     let scrollTop = this.layout.scrollTop
                     let scrollLeft = this.layout.scrollLeft
                     let c
+                    let _shouldCancel = false
 
                     if (tweenSide === 'left' || tweenSide === 'right') {
                         c = tweenSide === 'right'
@@ -323,20 +337,11 @@ export default {
                     // console.log((c >= wrapperHeight || c <= 0), c, wrapperHeight)
                     // console.log((tweenSide === 'left' || tweenSide === 'right') && (c < 0 || c > this.maxScrollLeft))
                     if ((tweenSide === 'top' || tweenSide === 'bottom') && (c >= maxScrollHeight || c <= 0)) {
-                        TWEEN.cancel()
-                        this.$emit('moveCb', {
-                            scrollLeft: this.layout.scrollLeft,
-                            scrollTop: this.layout.scrollTop
-                        })
-                        return
+                        _shouldCancel = true
                     } else if ((tweenSide === 'left' || tweenSide === 'right') && (c < 0 || c > this.maxScrollLeft)) {
-                        TWEEN.cancel()
-                        this.$emit('moveCb', {
-                            scrollLeft: this.layout.scrollLeft,
-                            scrollTop: this.layout.scrollTop
-                        })
-                        return
-                    } else if (tweenSide === 'top' || tweenSide === 'bottom') {
+                        _shouldCancel = true
+                    }
+                    if (tweenSide === 'top' || tweenSide === 'bottom') {
                         this.layout.scrollTop = c
                     } else {
                         this.layout.scrollLeft = c
@@ -344,10 +349,20 @@ export default {
 
                     // 设置scrollTop 和 scrollLeft  
                     this.setScroll(this.layout.scrollLeft, this.layout.scrollTop)
+                    if (_shouldCancel) {
+                        // 超过边界，停止
+                        this.layout.tweening = false
+                        this.tween.cancel()
+                        this.$emit('move', {
+                            scrollLeft: this.layout.scrollLeft,
+                            scrollTop: this.layout.scrollTop
+                        })
+                        return
+                    }
                    
-
                     if (tag === 'end') {
-                        this.$emit('moveCb', {
+                        this.layout.tweening = false
+                        this.$emit('move', {
                             scrollLeft: this.layout.scrollLeft,
                             scrollTop: this.layout.scrollTop
                         })

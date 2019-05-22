@@ -1,6 +1,7 @@
 class Store {
     constructor() {
-        this.columns = [],
+        this.columns = []
+        this._columns = []
         this.leftFixedColumns = []
         this.rightFixedColumns = []
         this.hiddenColumns = []
@@ -15,16 +16,19 @@ class Store {
 
     insertColumn(column, index, parent) {
         // console.log(column, index, parent)
-        this.columns.push(column)
+        this._columns.push(column)
         this.updateColumns()
         this.updateColumnWidth()
     }
 
     updateColumns() {
-        let columns = this.columns.slice()
+        let columns = this._columns.slice()
+        let normalColumns = columns.filter(item => !item.fixed && !item.hidden)
         this.leftFixedColumns = columns.filter(item => !!item.fixed && item.fixedSide === 'left')
         this.rightFixedColumns = columns.filter(item => !!item.fixed && item.fixedSide === 'right')
         this.hiddenColumns = columns.filter(item => !!item.hidden)
+        // 把left_fix的列放在最左边，right_fix的列放在最右边
+        this.columns = [...this.leftFixedColumns, ...normalColumns, ...this.rightFixedColumns]
     }
 
     updateColumnWidth() {

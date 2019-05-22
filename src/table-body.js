@@ -18,33 +18,38 @@ export default {
     },
 
     render(h) {
+        let columns = this.store.columns.slice()
+        if (this.fixed === 'right') {
+            columns = columns.reverse()
+        }
+        
         return (
             <table class="t-table_body" cellpadding="0" cellspacing="0" border="0" width={this.store.realColumnWidth}>
                 <colgroup>
-                    {this._l(this.store.columns, (row, index) => <col width={row.width}/>)}
+                    {this._l(columns, (row, index) => <col width={row.width}/>)}
                 </colgroup>
                 <tbody>
                     {
                         this._l(this.data, (row, index) => {
                             let tds;
                             if (this.fixed === true || this.fixed === 'left') {
-                                tds = this.store.columns.map((col, colIndex) => {
+                                tds = columns.map((col, colIndex) => {
                                     if (!col.fixed || col.fixedSide !== 'left') {
                                         return <td class="is-hidden">{col.renderCell(index, row, col.prop)}</td>
                                     } else {
-                                        return <td>{col.renderCell(index, row, col.prop)}</td>
+                                        return <td class={{ active: this.store.sortKey === col.prop }}>{col.renderCell(index, row, col.prop)}</td>
                                     }
                                 })
                             } else if (this.fixed === 'right') {
-                                tds = this.store.columns.map((col, colIndex) => {
+                                tds = columns.map((col, colIndex) => {
                                     if (!col.fixed || col.fixedSide !== 'right') {
                                         return <td class="is-hidden">{col.renderCell(index, row, col.prop)}</td>
                                     } else {
-                                        return <td>{col.renderCell(index, row, col.prop)}</td>
+                                        return <td class={{ active: this.store.sortKey === col.prop }}>{col.renderCell(index, row, col.prop)}</td>
                                     }
                                 })
                             } else {
-                                tds = this.store.columns.map((col, colIndex) => {
+                                tds = columns.map((col, colIndex) => {
                                     if (col.fixed) {
                                         return <td class="is-hidden">{col.renderCell(index, row, col.prop)}</td>
                                     } else {

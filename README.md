@@ -18,7 +18,12 @@
 > height: String table容器的高度，必填，单位为px  
 > width: String table容器的宽度，必填，单位为px  
 > canMove: 是否可以进行滑动，默认为false    
-> headerHeight: Number table header的高度，默认为30px  
+> headerHeight: Number table header的高度，默认为30px 
+
+
+### table slot  
+
+具名插槽empty : 当数据为空时，显示slot="empty"的内容
 
 ### table events 
 
@@ -32,3 +37,7 @@
 > prop: String, 设置sortable时，必填  
 > label: String 标题  
 > textAlign: String 标题的位置  
+
+### table-column slot  
+
+具名插槽 : header, 当添加slot="header"的插槽后，不显示label，而是显示slot="header"的内容
