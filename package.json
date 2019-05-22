@@ -15,6 +15,10 @@
     "vue",
     "table"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Toreant/vue-table.git"
+  },
   "author": "torenat",
   "license": "MIT",
   "devDependencies": {
@@ -47,9 +51,7 @@
     "vue-template-es2015-compiler": "^1.6.0",
     "webpack": "^4.31.0",
     "webpack-cli": "^3.3.2",
-    "webpack-merge": "^4.2.1"
-  },
-  "dependencies": {
+    "webpack-merge": "^4.2.1",
     "less": "^3.9.0"
   }
 }
