@@ -39,12 +39,12 @@ export default {
     render(h) {
         let columns = []
         let width
-        if (this.fixed === true || this.fixed === 'left') {
-            columns = this.store.leftFixedColumns
-            width = this.store.leftFixColumnWidth
-        } else if (this.fixed === 'right') {
+        if (this.fixed === 'right') {
             columns = this.store.rightFixedColumns
             width = this.store.rightFixColumnWidth
+        } else if (this.fixed === '' || this.fixed === 'left') {
+            columns = this.store.leftFixedColumns
+            width = this.store.leftFixColumnWidth
         } else {
             columns = this.store.columns
             width = this.store.realColumnWidth
@@ -73,9 +73,6 @@ export default {
                                         onClick={this.sortData(row.prop).bind(
                                             this
                                         )}
-                                        style={{
-                                            'text-align': row.textAlign
-                                        }}
                                         class={{
                                             active:
                                                 this.store.sortKey === row.prop,
@@ -101,11 +98,7 @@ export default {
                                 )
                             } else {
                                 th = (
-                                    <th
-                                        style={{
-                                            'text-align': row.textAlign
-                                        }}
-                                    >
+                                    <th>
                                         {row.renderHeader(
                                             index,
                                             row.label,

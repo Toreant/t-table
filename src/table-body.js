@@ -32,20 +32,20 @@ export default {
                     {
                         this._l(this.data, (row, index) => {
                             let tds
-                            if (this.fixed === true || this.fixed === 'left') {
-                                tds = columns.map((col, colIndex) => {
-                                    if (!col.fixed || col.fixedSide !== 'left') {
-                                        return <td class="is-hidden">{col.renderCell(index, row, col.prop)}</td>
-                                    } else {
-                                        return <td class={{ active: this.store.sortKey === col.prop }}>{col.renderCell(index, row, col.prop)}</td>
-                                    }
-                                })
-                            } else if (this.fixed === 'right') {
+                            if (this.fixed === 'right') {
                                 tds = columns.map((col, colIndex) => {
                                     if (!col.fixed || col.fixedSide !== 'right') {
                                         return <td class="is-hidden">{col.renderCell(index, row, col.prop)}</td>
                                     } else {
-                                        return <td class={{ active: this.store.sortKey === col.prop }}>{col.renderCell(index, row, col.prop)}</td>
+                                        return <td class={{ active: this.store.sortKey === col.prop }}  style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
+                                    }
+                                })
+                            } else if (this.fixed === '' || this.fixed === 'left') {
+                                tds = columns.map((col, colIndex) => {
+                                    if (!col.fixed || col.fixedSide !== 'left') {
+                                        return <td class="is-hidden" style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
+                                    } else {
+                                        return <td class={{ active: this.store.sortKey === col.prop }}  style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
                                     }
                                 })
                             } else {
@@ -53,7 +53,7 @@ export default {
                                     if (col.fixed) {
                                         return <td class="is-hidden">{col.renderCell(index, row, col.prop)}</td>
                                     } else {
-                                        return <td class={{ active: this.store.sortKey === col.prop }}>{col.renderCell(index, row, col.prop)}</td>
+                                        return <td class={{ active: this.store.sortKey === col.prop }}  style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
                                     }
                                 })
                             }

@@ -1,0 +1,8 @@
+v1.0.2 
+
+1. 添加首次渲染完成后触发的函数
+2. 修复fixed、sortable参数不传内容引起的bug
+3. 添加筛选后触发的函数
+4. 添加初始化data，添加默认__raw_index__
+5. 添加column数据textAlign参数
+6. 滑动阴影

@@ -14,7 +14,9 @@ function parseProp(target) {
         textAlign: 'center'
     }
 
-    if (target.fixed) {
+    console.log('fixed = ', target.fixed)
+
+    if (target.fixed !== false) {
         config.fixed = true
         if (typeof target.fixed === 'string' && ['left', 'right'].indexOf(target.fixed) !== -1) {
             config.fixedSide = target.fixed.toString()
@@ -31,7 +33,7 @@ function parseProp(target) {
         config.minWidth = parseInt(target.minWidth)
     }
 
-    if (target.sortable) {
+    if (target.sortable !== false) {
         if (typeof target.fixed === 'string' && ['asc', 'desc'].indexOf(target.fixed) !== -1) {
             config.sortable = target.sortable.toString()
         } else {

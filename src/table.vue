@@ -16,28 +16,28 @@
             :style="{width: style.width}"
             ref="tTableHeaderWrapper"
         >
-            <table-header :store="store" @sortData="sortData" :height="headerHeight"></table-header>
+            <table-header :store="store" @sortData="sortData" :maxHeight="headerHeight"></table-header>
         </div>
 
         <div
-            v-if="data.length > 0"
+            v-if="tempData.length > 0"
             class="t-table-wrapper"
             ref="tTableWrapper"
-            :style="{ width: style.width, height: bodyHeight }"
+            :style="{ width: style.width, maxHeight: bodyHeight }"
         >
             <div ref="tTableBody">
                 <table-body
                     :store="store"
-                    :data="data"
+                    :data="tempData"
                 ></table-body>
             </div>
         </div>
 
         <div
-            v-if="isLeftFixed && data.length > 0"
+            v-if="isLeftFixed && tempData.length > 0"
             class="t-table-fixed-wrapper_left"
             :class="store.horizontelScrollType"
-            :style="{maxWidth: leftFixColumnWidth + 'px', height: style.height}"
+            :style="{maxWidth: leftFixColumnWidth + 'px', maxHeight: style.height}"
         >
             <div>
                 <table-header
@@ -47,33 +47,33 @@
                     fixed="left"
                 ></table-header>
             </div>
-            <div class="t-table-fixed_body" ref="tTableLeftFixedWrapper" :style="{ height: bodyHeight }">
+            <div class="t-table-fixed_body" ref="tTableLeftFixedWrapper" :style="{ maxHeight: bodyHeight }">
                 <table-body
                     :store="store"
-                    :data="data"
+                    :data="tempData"
                     fixed="left"
                 ></table-body>
             </div>
         </div>
 
         <div
-            v-if="isRightFixed && data.length > 0"
+            v-if="isRightFixed && tempData.length > 0"
             class="t-table-fixed-wrapper_right"
             :class="store.horizontelScrollType"
-            :style="{maxWidth: rightFixColumnWidth + 'px', height: style.height}"
+            :style="{maxWidth: rightFixColumnWidth + 'px', maxHeight: style.height}"
         >
             <div>
                 <table-header
                 :store="store"
-                :height="headerHeight"
+                :maxHeight="headerHeight"
                 @sortData="sortData"
                 fixed="right"
                 ></table-header>
             </div>
-            <div class="t-table-fixed_body" ref="tTableRightFixedWrapper" :style="{ height: bodyHeight }">
+            <div class="t-table-fixed_body" ref="tTableRightFixedWrapper" :style="{ maxHeight: bodyHeight }">
                 <table-body
                     :store="store"
-                    :data="data"
+                    :data="tempData"
                     fixed="right"
                 ></table-body>
             </div>
@@ -108,7 +108,10 @@ export default {
 
     props: {
         border: [Boolean, String],
-        data: Array,
+        data: {
+            type: Array,
+            default: []
+        },
         height: {
             type: String,
             required: true
@@ -128,6 +131,14 @@ export default {
     },
 
     computed: {
+        raw_data: function () {
+            let data = this.data.map((item, index) => {
+                item.__raw_index__ = index
+                return item
+            })
+            return data
+        },
+
         style: function () {
             let r = {};
             if (this.height && typeof this.height === 'string') {
@@ -193,7 +204,8 @@ export default {
             leftFixColumnWidth: 0,
             rightFixColumnWidth: 0,
             layout: new Layout(),
-            tween: new TWEEN()
+            tween: new TWEEN(),
+            tempData: this.data.slice()
         }
     },
 
@@ -203,6 +215,13 @@ export default {
         },
         'store.rightFixColumnWidth'(newVal) {
             this.rightFixColumnWidth = newVal
+        },
+        'data'(newVal) {
+            // console.log(newVal)
+            this.tempData = newVal.map((item, index) => {
+                item.__raw_index__ = index
+                return item
+            })
         }
     },
 
@@ -212,6 +231,10 @@ export default {
 
     mounted() {
         this.initEvent(this.$refs.tableContainer)
+    },
+
+    updated() {
+        this.$emit('update')
     },
 
     destroyed() {
@@ -378,15 +401,22 @@ export default {
         },
 
         sortData(key, sortType) {
-            this.data = this.data.sort((a, b) => {
-                if (sortType === 1) {
-                    return a[key] - b[key]
-                } else if (sortType === 2) {
-                    return b[key] - a[key]
-                } else {
-
-                }
-            })
+            // debugger
+            if (sortType !== 0) {
+                this.tempData = this.tempData.sort((a, b) => {
+                    if (sortType === 1) {
+                        return a[key] - b[key]
+                    } else if (sortType === 2) {
+                        return b[key] - a[key]
+                    }
+                })
+            } else {
+                this.tempData = this.raw_data.sort((a, b) => {
+                    return a.__raw_index__ - b.__raw_index__
+                })
+            }
+            console.log(this.tempData)
+            this.$emit('sort', `key = ${key}`, `sortType = ${sortType}`)
         },
 
         setScroll(scrollLeft, scrollTop) {

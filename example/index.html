@@ -34,7 +34,7 @@
 
 <body>
     <div id="app">
-        <t-table :data="data" height="700px" width="width" header-height="30" @move="moveCb">
+        <t-table :data="data" height="700px" width="width" header-height="30" @move="moveCb" @sort="sort">
             <t-table-column width="150" fixed label="排行" text-align="left">
                 <span slot="header" style="padding-left: 10px;color: #333;">排行</span>
                 <template slot-scope="scope">
@@ -77,10 +77,10 @@
 
             <div slot="empty" class="empty-block">暂无数据</div>
         </t-table>
+        <button @click="push">click</button>
     </div>
-    <script src="https://matchweb.sports.qq.com/esports/dataAgent?uri=/data/kog/hero/0/getRank.js" async></script>
-    <script src="https://cdn.staticfile.org/vue/2.6.10/vue.min.js"></script>
-    <script src="../dist/table.dev.js"></script>
+    <script src="./vue.min.js"></script>
+    <script src="../dist/table.js"></script>
     <script>
         if (!heroRank) {
             var heroRank;
@@ -992,7 +992,7 @@
 
         new Vue({
             data: {
-                data: heroRank.slice(0, 50),
+                data: heroRank.slice(0, 10),
                 headerHeight: 50,
                 width: window.innerWidth
             },
@@ -1007,6 +1007,14 @@
             methods: {
                 moveCb: function (d) {
                     console.log(d)
+                },
+
+                sort: function (key, type) {
+                    console.log(key, type)
+                },
+
+                push: function () {
+                    this.data.unshift(heroRank.slice(-1)[0])
                 }
             }
         }).$mount('#app')

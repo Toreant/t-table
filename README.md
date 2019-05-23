@@ -1,8 +1,14 @@
 ## table组件  
 
 ### 用法  
+    npm install t-table --save
 
-    <t-table :data="data" height="300px" width="500px" headerHeight="30">
+    import TTable from "t-table"
+    Vue.use(TTable)
+
+    // or 通过<script src="./table.js"></script>
+
+    <t-table :data="data" height="300px" width="500px" header-height="30">
         <t-table-column fixed width="120" prop="title" label="标题" sortable></t-table-column>
         <t-table-column fixed width="120" label="#">
             <template slot-scope="scope">
@@ -13,31 +19,152 @@
 
 ### table props:  
 
-> border: [Boolean|String]  是否设置border，默认为设置下划线  
-> data: Array 数据   
-> height: String table容器的高度，必填，单位为px  
-> width: String table容器的宽度，必填，单位为px  
-> canMove: 是否可以进行滑动，默认为false    
-> headerHeight: Number table header的高度，默认为30px 
+<table>
+    <thead>
+        <tr>
+            <td>属性名</td>
+            <td>类型</td>
+            <td>默认值</td>
+            <td>描述</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>data</td>
+            <td>Array</td>
+            <td>[]</td>
+            <td>Table数据</td>
+        </tr>
+        <tr>
+            <td>height</td>
+            <td>String</td>
+            <td>无</td>
+            <td>table容器的高度，必填，单位为px  </td>
+        </tr>
+        <tr>
+            <td>width</td>
+            <td>String</td>
+            <td>无</td>
+            <td>table容器的宽度，必填，单位为px  </td>
+        </tr>
+        <tr>
+            <td>can-move</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>是否阻止默认的滑动事件</td>
+        </tr>
+        <tr>
+            <td>header-height</td>
+            <td>Number</td>
+            <td>30</td>
+            <td>header的高度，默认为30px</td>
+        </tr>
+    </tbody>
+</table>
 
 
 ### table slot  
 
-具名插槽empty : 当数据为空时，显示slot="empty"的内容
+<table>
+    <thead>
+        <tr>
+            <th>name</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>empty</td>
+            <td>当data为空时，显示empty内容</td>
+        </tr>
+    </tbody>
+</table>
 
 ### table events 
 
-> moveCb: 滑动结束后触发的方法  
+<table>
+    <thead>
+        <tr>
+            <th>name</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>move</td>
+            <td>每次滑动停止后触发的事件</td>
+        </tr>
+        <tr>
+            <td>update</td>
+            <td>组件updated时，触发的函数</td>
+        </tr>
+    </tbody>
+</table>
 
 ### table-column props
 
-> fixed: [Boolean|String] 设置此列固定，可选值【left|rgiht】，默认为left  
-> width: Number 设置列的宽度  
-> sortable: [Boolean|String]   
-> prop: String, 设置sortable时，必填  
-> label: String 标题  
-> textAlign: String 标题的位置  
+<table>
+    <thead>
+        <tr>
+            <th>prop名</th>
+            <th>类型</th>
+            <th>默认值</th>
+            <th>描述</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>fixed</td>
+            <td>[Boolean|String]</td>
+            <td>无</td>
+            <td>设置此列固定，可选值【left|rgiht】，不填具体指的话，fixed为left</td>
+        </tr>
+        <tr>
+            <td>width</td>
+            <td>Number</td>
+            <td>无</td>
+            <td>设置列的宽度 </td>
+        </tr>
+        <tr>
+            <td>sortable</td>
+            <td>[Boolean|String]</td>
+            <td>无</td>
+            <td>是否可筛选，可选值为【asc|desc】，不填具体指的话，sortable为asc</td>
+        </tr>
+        <tr>
+            <td>prop</td>
+            <td>String</td>
+            <td>无</td>
+            <td>对应列内容的字段名</td>
+        </tr>
+        <tr>
+            <td>label</td>
+            <td>String</td>
+            <td>无</td>
+            <td>对应列的辩题</td>
+        </tr>
+        <tr>
+            <td>text-align</td>
+            <td>String</td>
+            <td>无</td>
+            <td>对其的方式，默认为center</td>
+        </tr>
+    </tbody>
+</table>
 
 ### table-column slot  
 
-具名插槽 : header, 当添加slot="header"的插槽后，不显示label，而是显示slot="header"的内容
+<table>
+    <thead>
+        <tr>
+            <th>name</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>header</td>
+            <td>覆盖label标签，自定义col header</td>
+        </tr>
+    </tbody>
+</table>
