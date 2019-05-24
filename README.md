@@ -1,5 +1,7 @@
 ## table组件  
 
+移动端table组件，支持左右固定列、排序
+
 ### 用法  
     npm install t-table --save
 
