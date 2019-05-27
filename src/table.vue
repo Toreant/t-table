@@ -23,7 +23,7 @@
             v-if="tempData.length > 0"
             class="t-table-wrapper"
             ref="tTableWrapper"
-            :style="{ width: style.width, maxHeight: bodyHeight }"
+            :style="{ width: style.width, maxHeight: bodyHeight, height: bodyHeight }"
         >
             <div ref="tTableBody">
                 <table-body
@@ -37,7 +37,7 @@
             v-if="isLeftFixed && tempData.length > 0"
             class="t-table-fixed-wrapper_left"
             :class="store.horizontelScrollType"
-            :style="{maxWidth: leftFixColumnWidth + 'px', maxHeight: style.height}"
+            :style="{maxWidth: leftFixColumnWidth + 'px', maxHeight: maxHeight, height: style.height}"
         >
             <div>
                 <table-header
@@ -60,7 +60,7 @@
             v-if="isRightFixed && tempData.length > 0"
             class="t-table-fixed-wrapper_right"
             :class="store.horizontelScrollType"
-            :style="{maxWidth: rightFixColumnWidth + 'px', maxHeight: style.height}"
+            :style="{maxWidth: rightFixColumnWidth + 'px', maxHeight: this.maxHeight, height: style.height}"
         >
             <div>
                 <table-header
@@ -127,6 +127,9 @@ export default {
         headerHeight: {
             type: Number,
             default: 30
+        },
+        maxHeight: {
+            type: String,
         }
     },
 
@@ -153,8 +156,19 @@ export default {
 
         bodyHeight: function () {
             let height = ''
-            if (this.height && typeof this.height === 'string') {
-                height = (+this.height.match(/(\d+)/)[1] - this.headerHeight) + 'px'
+            let _height = this.height   
+                ? +this.height.match(/(\d+)/)[1]
+                : undefined
+            let _maxHeight = this.maxHeight
+                ? +this.maxHeight.match(/(\d+)/)[1]
+                : undefined
+
+            let h = _height && _maxHeight
+                ? Math.min(_height, _maxHeight)
+                : _height ? _height : _maxHeight
+            
+            if (h) {
+                height = (h - this.headerHeight) + 'px'
             }
             return height
         },
@@ -193,7 +207,7 @@ export default {
         },
 
         maxScrollHeight() {
-            return parseInt(getComputedStyle(this.tableBody).height.match(/(\d+)/)[1]) - this.bodyWrapper.getBoundingClientRect().height
+            return this.data.length / (this.data.length || 1) + this.tableBody.getBoundingClientRect().height - this.bodyWrapper.getBoundingClientRect().height
         }
     },
 
@@ -306,6 +320,8 @@ export default {
 
             let maxScrollHeight = this.maxScrollHeight
             this.store.updateHorizontelType(this.maxScrollLeft, this.layout.scrollLeft)
+
+            console.log('max-scrollheight', maxScrollHeight);
 
             let initSpeed;
             let tweenSide;

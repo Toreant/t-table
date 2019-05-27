@@ -41,7 +41,13 @@
             <td>height</td>
             <td>String</td>
             <td>无</td>
-            <td>table容器的高度，必填，单位为px  </td>
+            <td>table容器的高度，单位为px, height和maxHeight必须填写一个  </td>
+        </tr>
+        <tr>
+            <td>max-height</td>
+            <td>String</td>
+            <td>无</td>
+            <td>table容器的最大高度，单位为px  </td>
         </tr>
         <tr>
             <td>width</td>

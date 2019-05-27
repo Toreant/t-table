@@ -61,7 +61,8 @@ export default {
         sortable: [Boolean, String],
         prop: String,
         label: String,
-        textAlign: String
+        textAlign: String,
+        filter: Function
     },
     data() {
         return {
@@ -99,9 +100,12 @@ export default {
         // console.log('column mounted')
         this.isSubColumn = this.owner !== this.columnOrTableParent
         let index = this.getColIndex(this.columnOrTableParent, this.$el)
-        
-        let renderCell = function (i, data, prop) {
-            return <div class="cell">{data[prop]}</div>
+        console.log('filter = ', this.filter)
+        let renderCell = (i, data, prop) => {
+            let v = this.filter && typeof this.filter === 'function'
+                ? this.filter(data[prop])
+                : data[prop]
+            return <div class="cell">{ v }</div>
         }
 
         let renderHeader = function (i, label, prop) {

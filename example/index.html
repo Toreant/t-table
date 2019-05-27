@@ -34,7 +34,7 @@
 
 <body>
     <div id="app">
-        <t-table :data="data" height="700px" width="width" header-height="30" @move="moveCb" @sort="sort">
+        <t-table :data="data" max-height="500px" width="width" header-height="30" @move="moveCb" @sort="sort">
             <t-table-column width="150" fixed label="排行" text-align="left">
                 <span slot="header" style="padding-left: 10px;color: #333;">排行</span>
                 <template slot-scope="scope">
@@ -53,12 +53,12 @@
                     </div>
                 </template>
             </t-table-column>
-            <t-table-column width="120" label="ban" prop="ban_rate" sortable>
-                <template slot-scope="scope">
+            <t-table-column width="120" label="ban" prop="ban_rate" sortable :filter="undefined">
+                <!-- <template slot-scope="scope">
                     <div style="text-align: center;">
                             {{ scope.row.ban_rate | parseKda }}
                     </div>
-                </template>
+                </template> -->
             </t-table-column>
             <t-table-column width="120" label="胜率" fixed="right" prop="win_rate" sortable>
                 <template slot-scope="scope">
@@ -80,7 +80,7 @@
         <button @click="push">click</button>
     </div>
     <script src="./vue.min.js"></script>
-    <script src="../dist/table.js"></script>
+    <script src="../dist/table.dev.js"></script>
     <script>
         if (!heroRank) {
             var heroRank;
@@ -992,7 +992,7 @@
 
         new Vue({
             data: {
-                data: heroRank.slice(0, 10),
+                data: heroRank,
                 headerHeight: 50,
                 width: window.innerWidth
             },
@@ -1015,7 +1015,9 @@
 
                 push: function () {
                     this.data.unshift(heroRank.slice(-1)[0])
-                }
+                },
+
+                parsePer: undefined
             }
         }).$mount('#app')
     </script>

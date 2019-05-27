@@ -1,3 +1,10 @@
+v1.1.2
+1. 修复data数据更新时，table的无法进行tween滑动动漫
+
+v1.1.0
+1. table-column添加filter
+
+
 v1.0.2 
 
 1. 添加首次渲染完成后触发的函数

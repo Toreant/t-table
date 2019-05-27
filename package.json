@@ -1,6 +1,6 @@
 {
   "name": "t-table",
-  "version": "1.0.5",
+  "version": "1.1.2",
   "description": "vue table component for mobile",
   "main": "dist/table.js",
   "directories": {
