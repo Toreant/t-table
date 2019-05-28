@@ -100,7 +100,6 @@ export default {
         // console.log('column mounted')
         this.isSubColumn = this.owner !== this.columnOrTableParent
         let index = this.getColIndex(this.columnOrTableParent, this.$el)
-        console.log('filter = ', this.filter)
         let renderCell = (i, data, prop) => {
             let v = this.filter && typeof this.filter === 'function'
                 ? this.filter(data[prop])

@@ -34,8 +34,8 @@
 
 <body>
     <div id="app">
-        <t-table :data="data" max-height="500px" width="width" header-height="30" @move="moveCb" @sort="sort">
-            <t-table-column width="150" fixed label="排行" text-align="left">
+        <t-table :data="data" max-height="500px" width="width" header-height="30" @move="moveCb" :row-active-index="5">
+            <t-table-column width="150" label="排行" fixed text-align="left">
                 <span slot="header" style="padding-left: 10px;color: #333;">排行</span>
                 <template slot-scope="scope">
                     <div style="padding: 5px;" @click="alert(scope.row.name)">
@@ -60,7 +60,7 @@
                     </div>
                 </template> -->
             </t-table-column>
-            <t-table-column width="120" label="胜率" fixed="right" prop="win_rate" sortable>
+            <t-table-column width="120" label="胜率" prop="win_rate" sortable>
                 <template slot-scope="scope">
                     <div style="text-align: center;">
                             {{ scope.row.win_rate | parseKda }}

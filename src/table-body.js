@@ -1,4 +1,6 @@
 export default {
+    functional: true,
+
     props: {
         store: {
             required: true
@@ -11,54 +13,36 @@ export default {
         }
     },
 
-    data() {
-        return {
-            // isReady: false
-        }
-    },
-
-    render(h) {
-        let columns = this.store.columns.slice()
-        if (this.fixed === 'right') {
+    render(h, context) {
+        let columns = context.props.store.columns.slice()
+        if (context.props.fixed === 'right') {
             columns = columns.reverse()
         }
         
         return (
-            <table class="t-table_body" cellpadding="0" cellspacing="0" border="0" width={this.store.realColumnWidth}>
+            <table class="t-table_body" cellpadding="0" cellspacing="0" border="0" width={context.props.store.realColumnWidth}>
                 <colgroup>
-                    {this._l(columns, (row, index) => <col width={row.width}/>)}
+                    {context._l(columns, (row, index) => <col width={row.width}/>)}
                 </colgroup>
                 <tbody>
                     {
-                        this._l(this.data, (row, index) => {
+                        context._l(context.props.data, (row, index) => {
                             let tds
-                            if (this.fixed === 'right') {
+                            if (context.props.fixed === 'right') {
                                 tds = columns.map((col, colIndex) => {
-                                    if (!col.fixed || col.fixedSide !== 'right') {
-                                        return <td class="is-hidden">{col.renderCell(index, row, col.prop)}</td>
-                                    } else {
-                                        return <td class={{ active: this.store.sortKey === col.prop }}  style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
-                                    }
+                                    return <td class={{ active: context.props.store.sortKey === col.prop, 'is-hidden': !col.fixed || col.fixedSide !== 'right' }}  style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
                                 })
-                            } else if (this.fixed === '' || this.fixed === 'left') {
+                            } else if (context.props.fixed === '' || context.props.fixed === 'left') {
                                 tds = columns.map((col, colIndex) => {
-                                    if (!col.fixed || col.fixedSide !== 'left') {
-                                        return <td class="is-hidden" style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
-                                    } else {
-                                        return <td class={{ active: this.store.sortKey === col.prop }}  style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
-                                    }
+                                    return <td class={{ active: context.props.store.sortKey === col.prop, 'is-hidden': !col.fixed || col.fixedSide !== 'left' }}  style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
                                 })
                             } else {
                                 tds = columns.map((col, colIndex) => {
-                                    if (col.fixed) {
-                                        return <td class="is-hidden">{col.renderCell(index, row, col.prop)}</td>
-                                    } else {
-                                        return <td class={{ active: this.store.sortKey === col.prop }}  style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
-                                    }
+                                    return <td class={{ active: context.props.store.sortKey === col.prop, 'is-hidden': col.fixed }}  style={{ 'text-align': col.textAlign }}>{col.renderCell(index, row, col.prop)}</td>
                                 })
                             }
                             let tr = (
-                                <tr class={{ 'active': this.rowActiveIndex > index }}>
+                                <tr class={{ 'active': context.props.rowActiveIndex > index }}>
                                     {tds}
                                 </tr>
                             )

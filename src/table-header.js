@@ -17,8 +17,11 @@ export default {
     },
 
     methods: {
-        sortData: function (key) {
+        sortData: function (key, sortable) {
             return function (e) {
+                if (!sortable) {
+                    return false
+                }
                 if (this.store.sortKey !== key) {
                     this.sortType = 1
                     this.store.sortKey = key
@@ -67,47 +70,39 @@ export default {
                         {this._l(columns, (row, index) => {
                             let th
 
-                            if (row.sortable) {
-                                th = (
-                                    <th
-                                        onClick={this.sortData(row.prop).bind(
-                                            this
-                                        )}
-                                        class={{
-                                            active:
-                                                this.store.sortKey === row.prop,
-                                            sortable: true,
-                                            asc:
-                                                this.sortType === 1 &&
-                                                this.store.sortKey === row.prop,
-                                            desc:
-                                                this.sortType === 2 &&
-                                                this.store.sortKey === row.prop
-                                        }}
-                                    >
-                                        {row.renderHeader(
-                                            index,
-                                            row.label,
-                                            row.prop
-                                        )}
-                                        <span class="t-table-sort">
-                                            <i class="sort-icon asc" />
-                                            <i class="sort-icon desc" />
-                                        </span>
-                                    </th>
-                                )
-                            } else {
-                                th = (
-                                    <th>
-                                        {row.renderHeader(
-                                            index,
-                                            row.label,
-                                            row.prop
-                                        )}
-                                    </th>
-                                )
-                            }
-
+                            th = (
+                                <th
+                                    onClick={this.sortData(row.prop, row.sortable).bind(
+                                        this
+                                    )}
+                                    class={{
+                                        active:
+                                            this.sortType !== 0 && 
+                                            this.store.sortKey === row.prop,
+                                        sortable: row.sortable,
+                                        asc:
+                                            this.sortType === 1 &&
+                                            this.store.sortKey === row.prop,
+                                        desc:
+                                            this.sortType === 2 &&
+                                            this.store.sortKey === row.prop
+                                    }}
+                                >
+                                    {row.renderHeader(
+                                        index,
+                                        row.label,
+                                        row.prop
+                                    )}
+                                    {
+                                        row.sortable
+                                            ? <span class="t-table-sort">
+                                                <i class="sort-icon asc" />
+                                                <i class="sort-icon desc" />
+                                            </span>
+                                            : ''
+                                    }
+                                </th>
+                            )
                             return th
                         })}
                     </tr>

@@ -157,6 +157,12 @@
             <td>无</td>
             <td>对其的方式，默认为center</td>
         </tr>
+        <tr>
+            <td>row-active-index</td>
+            <td>Number</td>
+            <td>8</td>
+            <td>active行的个数，从第一行顺序开始</td>
+        </tr>
     </tbody>
 </table>
 
