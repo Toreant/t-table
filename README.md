@@ -161,7 +161,7 @@
             <td>text-align</td>
             <td>String</td>
             <td>无</td>
-            <td>对其的方式，默认为center</td>
+            <td>对齐的方式，默认为center</td>
         </tr>
     </tbody>
 </table>
